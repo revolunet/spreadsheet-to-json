@@ -19,7 +19,7 @@
     "build": "babel -d ./dist ./src"
   },
   "files": [
-    "index.js"
+    "dist/index.js"
   ],
   "keywords": [
     "google",
