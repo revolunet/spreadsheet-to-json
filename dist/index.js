@@ -53,12 +53,20 @@ function extractSheet(worksheet, cb) {
  * fetch N sheets from the given spreadsheet and return a single JSON using extractSheet function
  */
 
-function extractSheets(spreadsheetKey, sheetsToExtract, credentials, cb) {
+function extractSheets(_x, cb) {
+    var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    var spreadsheetKey = _ref.spreadsheetKey;
+    var sheetsToExtract = _ref.sheetsToExtract;
+    var credentials = _ref.credentials;
+
     var spreadSheet = new _googleSpreadsheet2['default'](spreadsheetKey);
     spreadSheet.useServiceAccountAuth(credentials, function (err) {
 
         spreadSheet.getInfo(function (err, sheetInfo) {
-
+            if (err) {
+                throw err;
+            }
             function getWorkSheetData(name, cb2) {
                 var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
                 extractSheet(worksheet, function (data2) {

@@ -22,16 +22,16 @@ The final JSON is based on sheets names and column titles and finally looks like
     ],
     "Invoices":  [{
             "id": "F0001",
-            "amount": "12367.12"
+            "totalAmount": "12367.12"
         },{
             "name": "F0002",
-            "amount": "4398.2"
+            "totalAmount": "4398.2"
         }
     ]
 }
 ```
 
-
+This is useful when you let people edit spreadsheets and need to work with the data.
 
 
 ## Install
@@ -44,12 +44,11 @@ The final JSON is based on sheets names and column titles and finally looks like
 
 var extractSheets = require('spreadsheet-to-json');
 
-var credentials = require('./google-generated-creds.json');
-
-var spreadsheetKey = 'abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc';
-var sheetsToExtract = ['Customers', 'Invoices'];
-
-extractSheets(spreadsheetKey, sheetsToExtract, credentials, function(data) {
+extractSheets({
+    spreadsheetKey: 'abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc',
+    credentials: require('./google-generated-creds.json'),
+    sheetsToExtract: ['Customers', 'Invoices']
+}, function(data) {
     console.log('Customers: ', data.Customers);
     console.log('Invoices: ', data.Invoices);
 });
@@ -59,19 +58,22 @@ extractSheets(spreadsheetKey, sheetsToExtract, credentials, function(data) {
 
 ## Authentification
 
-Create a credentials.json file from here : https://console.developers.google.com/
+Create a credentials.json file for your app here : https://console.developers.google.com/
 
  - create a new project
  - enable the Drive API
  - in **credentials**, select **create new client id** then **service account** and save the generated JSON. (privately)
  - the just paste the JSON contents as `credentials` in the `extractSheets` call.
 
+Share the target google spreadsheet with the `client_email` from the credentials.json.
+
 ## Scripts
 
  - **npm run start** : `babel-node ./index`
  - **npm run readme** : `node ./node_modules/.bin/node-readme`
  - **npm run test** : `./node_modules/babel-tape-runner/bin/babel-tape-runner spec/**/*.spec.js | ./node_modules/.bin/tap-spec`
- - **npm run build** : `babel -d ./dist ./src`
+ - **npm run build** : `babel -d ./dist ./src && npm run readme`
+ - **npm run patch** : `npm run build && npm version patch && git push && npm publish`
 
 
 ## Dependencies

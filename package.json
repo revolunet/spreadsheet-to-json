@@ -16,11 +16,10 @@
     "start": "babel-node ./index",
     "readme": "node ./node_modules/.bin/node-readme",
     "test": "./node_modules/babel-tape-runner/bin/babel-tape-runner spec/**/*.spec.js | ./node_modules/.bin/tap-spec",
-    "build": "babel -d ./dist ./src"
+    "build": "babel -d ./dist ./src && npm run readme",
+    "patch": "npm run build && npm version patch && git push && npm publish"
   },
-  "files": [
-    "dist/index.js"
-  ],
+  "main": "dist/index.js",
   "keywords": [
     "google",
     "spreadsheet",

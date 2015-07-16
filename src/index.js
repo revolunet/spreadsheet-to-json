@@ -38,12 +38,14 @@ function extractSheet(worksheet, cb) {
 /**
  * fetch N sheets from the given spreadsheet and return a single JSON using extractSheet function
  */
-export default function extractSheets(spreadsheetKey, sheetsToExtract, credentials, cb) {
+export default function extractSheets({spreadsheetKey, sheetsToExtract, credentials} = {}, cb) {
     var spreadSheet = new GoogleSpreadsheet(spreadsheetKey);
     spreadSheet.useServiceAccountAuth(credentials, function(err){
 
         spreadSheet.getInfo( function( err, sheetInfo ){
-
+            if (err) {
+                throw err;
+            }
             function getWorkSheetData(name, cb2) {
                 var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
                 extractSheet(worksheet, data2 => {
