@@ -1,0 +1,41 @@
+{
+  "name": "spreadsheet-to-json",
+  "version": "0.0.1",
+  "description": "Convert Google Spreadsheets to JSON using Javascript",
+  "license": "MIT",
+  "repository": "revolunet/spreadsheet-to-json",
+  "author": {
+    "name": "Julien Bouquillon",
+    "email": "julien@bouquillon.com",
+    "url": "http://github.com/revolunet"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "start": "babel-node ./index",
+    "readme": "node ./node_modules/.bin/node-readme",
+    "test": "./node_modules/babel-tape-runner/bin/babel-tape-runner spec/**/*.spec.js | ./node_modules/.bin/tap-spec",
+    "build": "babel -d ./dist ./src"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "google",
+    "spreadsheet",
+    "json",
+    "drive"
+  ],
+  "dependencies": {
+    "google-spreadsheet": "1.0.1",
+    "lodash": "3.10.0"
+  },
+  "devDependencies": {
+    "babel-tape-runner": "1.1.0",
+    "babelify": "6.1.2",
+    "node-readme": "0.1.7",
+    "tap-spec": "4.0.2",
+    "tape": "4.0.0"
+  }
+}
