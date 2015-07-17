@@ -6,7 +6,7 @@
 
 Convert Google Spreadsheets to JSON using Javascript
 
-Uses [google-spreadsheet](https://www.npmjs.com/package/google-spreadsheet) library to fetch data.
+Uses the [google-spreadsheet](https://www.npmjs.com/package/google-spreadsheet) library to fetch data.
 
 The final JSON is based on sheets names and column titles and finally looks like this :
 
@@ -41,13 +41,18 @@ This is useful when you let people edit spreadsheets and need to work with the d
 ## QuickStart
 
 ```js
-
 var extractSheets = require('spreadsheet-to-json');
+
+// optional custom format cell function
+var formatCell = function(sheetTitle, columnTitle, value) {
+    return value.toUpperCase();
+};
 
 extractSheets({
     spreadsheetKey: 'abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc',
     credentials: require('./google-generated-creds.json'),
-    sheetsToExtract: ['Customers', 'Invoices']
+    sheetsToExtract: ['Customers', 'Invoices'],
+    formatCell: formatCell
 }, function(data) {
     console.log('Customers: ', data.Customers);
     console.log('Invoices: ', data.Invoices);
@@ -71,7 +76,7 @@ Share the target google spreadsheet with the `client_email` from the credentials
 
  - **npm run start** : `babel-node ./index`
  - **npm run readme** : `node ./node_modules/.bin/node-readme`
- - **npm run test** : `./node_modules/babel-tape-runner/bin/babel-tape-runner spec/**/*.spec.js | ./node_modules/.bin/tap-spec`
+ - **npm run test** : `find ./spec -iname '*.spec.js' -exec ./node_modules/.bin/babel-node {} \; | ./node_modules/.bin/tap-spec`
  - **npm run build** : `babel -d ./dist ./src && npm run readme`
  - **npm run patch** : `npm run build && npm version patch && git push && npm publish`
 
@@ -82,9 +87,11 @@ Package | Version | Dev
 --- |:---:|:---:
 [google-spreadsheet](https://www.npmjs.com/package/google-spreadsheet) | 1.0.1 | ✖
 [lodash](https://www.npmjs.com/package/lodash) | 3.10.0 | ✖
-[babel-tape-runner](https://www.npmjs.com/package/babel-tape-runner) | 1.1.0 | ✔
+[babel-core](https://www.npmjs.com/package/babel-core) | 5.7.3 | ✔
 [babelify](https://www.npmjs.com/package/babelify) | 6.1.2 | ✔
+[eslint](https://www.npmjs.com/package/eslint) | 1.0.0-rc-1 | ✔
 [node-readme](https://www.npmjs.com/package/node-readme) | 0.1.7 | ✔
+[proxyquire](https://www.npmjs.com/package/proxyquire) | 1.6.0 | ✔
 [tap-spec](https://www.npmjs.com/package/tap-spec) | 4.0.2 | ✔
 [tape](https://www.npmjs.com/package/tape) | 4.0.0 | ✔
 

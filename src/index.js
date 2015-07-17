@@ -7,15 +7,19 @@ import GoogleSpreadsheet from 'google-spreadsheet';
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-function extractSheet(worksheet, cb) {
-    // fetch column headers
+export function extractSheet({worksheet, formatCell = a => a}, cb) {
+    // fetch column headers first
     worksheet.getCells({
         'min-row': 1,
         'max-row': 1,
         'min-col': 1,
-        'max-col': worksheet.colCount
+        'max-col': parseInt(worksheet.colCount, 10)
     }, function(err, rows) {
+        if (err) {
+            throw err;
+        }
         var colTitles = rows.map(row => row.value);
+        // then fetch datas
         fetchData(worksheet, colTitles, cb);
     });
 
@@ -24,10 +28,14 @@ function extractSheet(worksheet, cb) {
             'start': 0,
             'num': worksheet.rowCount
         }, function(err, rows) {
+            if (err) {
+                throw err;
+            }
             cb(rows.map(row => {
                 let cleanRow = {};
                 colTitles.forEach(title => {
-                    cleanRow[title] = row[title] || null;
+                    // for some reason, keys are lower-cased in google xml api
+                    cleanRow[title] = formatCell(row[title.toLowerCase()] || null, worksheet.title, title);
                 });
                 return cleanRow;
             }));
@@ -38,7 +46,7 @@ function extractSheet(worksheet, cb) {
 /**
  * fetch N sheets from the given spreadsheet and return a single JSON using extractSheet function
  */
-export default function extractSheets({spreadsheetKey, sheetsToExtract, credentials} = {}, cb) {
+export function extractSheets({spreadsheetKey, sheetsToExtract, credentials = {}, formatCell = a => a} = {}, cb) {
     var spreadSheet = new GoogleSpreadsheet(spreadsheetKey);
     spreadSheet.useServiceAccountAuth(credentials, function(err){
 
@@ -48,7 +56,7 @@ export default function extractSheets({spreadsheetKey, sheetsToExtract, credenti
             }
             function getWorkSheetData(name, cb2) {
                 var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
-                extractSheet(worksheet, data2 => {
+                extractSheet({worksheet, formatCell}, data2 => {
                     cb2(data2);
                 });
             }

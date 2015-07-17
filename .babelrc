@@ -1,6 +1,6 @@
 {
   "stage": 0,
-  "optional": [],
+  "plugins": [],
   "env": {
     "production": {
       "optional": []

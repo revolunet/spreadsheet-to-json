@@ -15,7 +15,7 @@
   "scripts": {
     "start": "babel-node ./index",
     "readme": "node ./node_modules/.bin/node-readme",
-    "test": "./node_modules/babel-tape-runner/bin/babel-tape-runner spec/**/*.spec.js | ./node_modules/.bin/tap-spec",
+    "test": "find ./spec -iname '*.spec.js' -exec ./node_modules/.bin/babel-node {} \\; | ./node_modules/.bin/tap-spec",
     "build": "babel -d ./dist ./src && npm run readme",
     "patch": "npm run build && npm version patch && git push && npm publish"
   },
@@ -31,9 +31,11 @@
     "lodash": "3.10.0"
   },
   "devDependencies": {
-    "babel-tape-runner": "1.1.0",
+    "babel-core": "5.7.3",
     "babelify": "6.1.2",
+    "eslint": "1.0.0-rc-1",
     "node-readme": "0.1.7",
+    "proxyquire": "1.6.0",
     "tap-spec": "4.0.2",
     "tape": "4.0.0"
   }

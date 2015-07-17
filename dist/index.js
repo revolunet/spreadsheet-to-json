@@ -3,7 +3,8 @@
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-exports['default'] = extractSheets;
+exports.extractSheet = extractSheet;
+exports.extractSheets = extractSheets;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -19,17 +20,28 @@ var _googleSpreadsheet2 = _interopRequireDefault(_googleSpreadsheet);
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-function extractSheet(worksheet, cb) {
-    // fetch column headers
+
+function extractSheet(_ref, cb) {
+    var worksheet = _ref.worksheet;
+    var _ref$formatCell = _ref.formatCell;
+    var formatCell = _ref$formatCell === undefined ? function (a) {
+        return a;
+    } : _ref$formatCell;
+
+    // fetch column headers first
     worksheet.getCells({
         'min-row': 1,
         'max-row': 1,
         'min-col': 1,
-        'max-col': worksheet.colCount
+        'max-col': parseInt(worksheet.colCount, 10)
     }, function (err, rows) {
+        if (err) {
+            throw err;
+        }
         var colTitles = rows.map(function (row) {
             return row.value;
         });
+        // then fetch datas
         fetchData(worksheet, colTitles, cb);
     });
 
@@ -38,10 +50,14 @@ function extractSheet(worksheet, cb) {
             'start': 0,
             'num': worksheet.rowCount
         }, function (err, rows) {
+            if (err) {
+                throw err;
+            }
             cb(rows.map(function (row) {
                 var cleanRow = {};
                 colTitles.forEach(function (title) {
-                    cleanRow[title] = row[title] || null;
+                    // for some reason, keys are lower-cased in google xml api
+                    cleanRow[title] = formatCell(row[title.toLowerCase()] || null, worksheet.title, title);
                 });
                 return cleanRow;
             }));
@@ -54,11 +70,16 @@ function extractSheet(worksheet, cb) {
  */
 
 function extractSheets(_x, cb) {
-    var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+    var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-    var spreadsheetKey = _ref.spreadsheetKey;
-    var sheetsToExtract = _ref.sheetsToExtract;
-    var credentials = _ref.credentials;
+    var spreadsheetKey = _ref2.spreadsheetKey;
+    var sheetsToExtract = _ref2.sheetsToExtract;
+    var _ref2$credentials = _ref2.credentials;
+    var credentials = _ref2$credentials === undefined ? {} : _ref2$credentials;
+    var _ref2$formatCell = _ref2.formatCell;
+    var formatCell = _ref2$formatCell === undefined ? function (a) {
+        return a;
+    } : _ref2$formatCell;
 
     var spreadSheet = new _googleSpreadsheet2['default'](spreadsheetKey);
     spreadSheet.useServiceAccountAuth(credentials, function (err) {
@@ -69,7 +90,7 @@ function extractSheets(_x, cb) {
             }
             function getWorkSheetData(name, cb2) {
                 var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
-                extractSheet(worksheet, function (data2) {
+                extractSheet({ worksheet: worksheet, formatCell: formatCell }, function (data2) {
                     cb2(data2);
                 });
             }
@@ -92,4 +113,3 @@ function extractSheets(_x, cb) {
 }
 
 ;
-module.exports = exports['default'];
