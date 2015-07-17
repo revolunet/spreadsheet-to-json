@@ -47,6 +47,14 @@ mockData.Invoices = [for (i of range(1, 10)) i].map(id => {
 	};
 })
 
+mockData.Leads = [for (i of range(1, 10)) i].map(id => {
+	return {
+		id,
+		estimate: ''+parseInt(Math.random()*50000,10),
+		ref: `L2015-${id}`
+	};
+})
+
 mockData.Private = [{id:42, secret: 'stuff'}];
 
 
@@ -57,7 +65,8 @@ var worksheetMock = tableName => {
 		colCount:  Object.keys(mockData[tableName][0]).length,
 		getCells: (options, cb) => {
 			// the column titles
-			let cells = exportedFields[tableName].map(key => { return {value: key}; });
+			var fields = exportedFields[tableName].length?exportedFields[tableName]: Object.keys(mockData[tableName][0]);
+			let cells = fields.map(key => { return {value: key}; });
 			cb(null, cells);
 		},
 		getRows: function(options, cb) {
@@ -70,6 +79,7 @@ var worksheetMock = tableName => {
 const exportedFields = {
 	Customers: ['id', 'name', 'location'],
 	Invoices: ['ref', 'amount'],
+	Leads: [],
 	Private: ['id']
 };
 
@@ -77,6 +87,7 @@ const sheetMock = {
 	worksheets: [
 		worksheetMock('Customers'),
 		worksheetMock('Invoices'),
+		worksheetMock('Leads'),
 		worksheetMock('Private')
 	]
 }
@@ -132,7 +143,7 @@ test("formatCell", (t) => {
 });
 
 test("extractSheets should produce correct data", (t) => {
-	let sheetsToExtract = ['Customers', 'Invoices']
+	let sheetsToExtract = ['Customers', 'Invoices', 'Leads']
 	converter.extractSheets({
 		spreadsheetKey: 'xxx',
 		sheetsToExtract
@@ -143,7 +154,9 @@ test("extractSheets should produce correct data", (t) => {
 
 		sheetsToExtract.map(sheetName => {
 			t.deepEqual(data[sheetName].length, mockData[sheetName].length, `${sheetName} should have ${mockData[sheetName].length} rows`);
-			t.deepEqual(Object.keys(data[sheetName][0]), exportedFields[sheetName], `${sheetName} properties names should equal`);
+
+			var expectedFields = exportedFields[sheetName].length?exportedFields[sheetName]:Object.keys(mockData[sheetName][0]);
+			t.deepEqual(Object.keys(data[sheetName][0]), expectedFields, `${sheetName} properties names should equal ${expectedFields}`);
 		})
 
 		t.end();

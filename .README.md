@@ -49,9 +49,13 @@ var formatCell = function(sheetTitle, columnTitle, value) {
 };
 
 extractSheets({
+    // your google spreadhsheet key
     spreadsheetKey: 'abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc',
+    // your google oauth2 credentials
     credentials: require('./google-generated-creds.json'),
+    // names of the sheet you want to extract (or [] for all)
     sheetsToExtract: ['Customers', 'Invoices'],
+    // custom function to parse the cells
     formatCell: formatCell
 }, function(data) {
     console.log('Customers: ', data.Customers);

@@ -54,15 +54,19 @@ export function extractSheets({spreadsheetKey, sheetsToExtract, credentials = {}
             if (err) {
                 throw err;
             }
+
+            var sheetsNames = sheetInfo.worksheets.map(sheet => sheet.title);
+            var results = {}
+            if (sheetsToExtract.length === 0) {
+                sheetsToExtract = sheetsNames;
+            }
+
             function getWorkSheetData(name, cb2) {
                 var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
                 extractSheet({worksheet, formatCell}, data2 => {
                     cb2(data2);
                 });
             }
-
-            var sheetsNames = sheetInfo.worksheets.map(sheet => sheet.title);
-            var results = {}
 
             sheetsToExtract.map(table => {
                 getWorkSheetData(table, data => {
