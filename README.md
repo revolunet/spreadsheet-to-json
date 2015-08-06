@@ -94,7 +94,7 @@ Package | Version | Dev
 [babel-core](https://www.npmjs.com/package/babel-core) | 5.7.3 | ✔
 [babelify](https://www.npmjs.com/package/babelify) | 6.1.2 | ✔
 [eslint](https://www.npmjs.com/package/eslint) | 1.0.0-rc-1 | ✔
-[node-readme](https://www.npmjs.com/package/node-readme) | 0.1.7 | ✔
+[node-readme](https://www.npmjs.com/package/node-readme) | 0.1.8 | ✔
 [proxyquire](https://www.npmjs.com/package/proxyquire) | 1.6.0 | ✔
 [tap-spec](https://www.npmjs.com/package/tap-spec) | 4.0.2 | ✔
 [tape](https://www.npmjs.com/package/tape) | 4.0.0 | ✔
