@@ -36,7 +36,7 @@ function extractSheet(_ref, cb) {
         'max-col': parseInt(worksheet.colCount, 10)
     }, function (err, rows) {
         if (err) {
-            throw err;
+            return cb(err);
         }
         var colTitles = rows.map(function (row) {
             return row.value;
@@ -51,9 +51,9 @@ function extractSheet(_ref, cb) {
             'num': worksheet.rowCount
         }, function (err, rows) {
             if (err) {
-                throw err;
+                return cb(err);
             }
-            cb(rows.map(function (row) {
+            cb(null, rows.map(function (row) {
                 var cleanRow = {};
                 colTitles.forEach(function (title) {
                     // for some reason, keys are lower-cased in google xml api
@@ -83,28 +83,35 @@ function extractSheets(_x, cb) {
 
     var spreadSheet = new _googleSpreadsheet2['default'](spreadsheetKey);
     spreadSheet.useServiceAccountAuth(credentials, function (err) {
-
+        if (err) {
+            return cb(err);
+        }
         spreadSheet.getInfo(function (err, sheetInfo) {
             if (err) {
-                throw err;
-            }
-            function getWorkSheetData(name, cb2) {
-                var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
-                extractSheet({ worksheet: worksheet, formatCell: formatCell }, function (data2) {
-                    cb2(data2);
-                });
+                return cb(err);
             }
 
             var sheetsNames = sheetInfo.worksheets.map(function (sheet) {
                 return sheet.title;
             });
             var results = {};
+            if (sheetsToExtract.length === 0) {
+                sheetsToExtract = sheetsNames;
+            }
+
+            function getWorkSheetData(name, cb2) {
+                var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
+                extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2);
+            }
 
             sheetsToExtract.map(function (table) {
-                getWorkSheetData(table, function (data) {
+                getWorkSheetData(table, function (err, data) {
+                    if (err) {
+                        return cb(err);
+                    }
                     results[table] = data;
                     if (Object.keys(results).length === sheetsToExtract.length) {
-                        cb(results);
+                        cb(null, results);
                     }
                 });
             });

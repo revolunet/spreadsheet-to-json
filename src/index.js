@@ -16,7 +16,7 @@ export function extractSheet({worksheet, formatCell = a => a}, cb) {
         'max-col': parseInt(worksheet.colCount, 10)
     }, function(err, rows) {
         if (err) {
-            throw err;
+            return cb(err);
         }
         var colTitles = rows.map(row => row.value);
         // then fetch datas
@@ -29,9 +29,9 @@ export function extractSheet({worksheet, formatCell = a => a}, cb) {
             'num': worksheet.rowCount
         }, function(err, rows) {
             if (err) {
-                throw err;
+                return cb(err);
             }
-            cb(rows.map(row => {
+            cb(null, rows.map(row => {
                 let cleanRow = {};
                 colTitles.forEach(title => {
                     // for some reason, keys are lower-cased in google xml api
@@ -49,10 +49,12 @@ export function extractSheet({worksheet, formatCell = a => a}, cb) {
 export function extractSheets({spreadsheetKey, sheetsToExtract, credentials = {}, formatCell = a => a} = {}, cb) {
     var spreadSheet = new GoogleSpreadsheet(spreadsheetKey);
     spreadSheet.useServiceAccountAuth(credentials, function(err){
-
+        if (err) {
+            return cb(err);
+        }
         spreadSheet.getInfo( function( err, sheetInfo ){
             if (err) {
-                throw err;
+                return cb(err);
             }
 
             var sheetsNames = sheetInfo.worksheets.map(sheet => sheet.title);
@@ -63,16 +65,17 @@ export function extractSheets({spreadsheetKey, sheetsToExtract, credentials = {}
 
             function getWorkSheetData(name, cb2) {
                 var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
-                extractSheet({worksheet, formatCell}, data2 => {
-                    cb2(data2);
-                });
+                extractSheet({worksheet, formatCell}, cb2);
             }
 
             sheetsToExtract.map(table => {
-                getWorkSheetData(table, data => {
+                getWorkSheetData(table, (err, data) => {
+                    if (err) {
+                        return cb(err);
+                    }
                     results[table] = data;
                     if (Object.keys(results).length === sheetsToExtract.length) {
-                        cb(results);
+                        cb(null, results);
                     }
                 });
             });

@@ -112,7 +112,10 @@ test("extractSheet should produce correct data", (t) => {
 
 	converter.extractSheet({
 		worksheet: worksheetMock('Customers')
-	}, function(data) {
+	}, function(err, data) {
+		if (err) {
+			t.fail('should not throw', err);
+		}
 		t.equal(data.length, mockData.Customers.length, `sheet should have ${mockData.Customers.length} rows`);
 		t.equal(Object.keys(data[0]).length, exportedFields.Customers.length, `row should have ${exportedFields.Customers.length} properties`);
 		t.deepEqual(Object.keys(data[0]), exportedFields.Customers, `row should have correct properties`);
@@ -133,7 +136,10 @@ test("formatCell", (t) => {
 	converter.extractSheet({
 		worksheet: worksheetMock('Customers'),
 		formatCell
-	}, function(data) {
+	}, function(err, data) {
+		if (err) {
+			t.fail('should not throw', err);
+		}
 		t.notEqual(data[0].name, mockData.Customers[0].name, `names should not be equal`);
 		t.equal(data[0].name, mockData.Customers[0].name.toUpperCase(), `name should be uppercased`);
 		t.equal(data[0].id, mockData.Customers[0].id, `id should be ${mockData.Customers[0].id}`);
@@ -147,7 +153,10 @@ test("extractSheets should produce correct data", (t) => {
 	converter.extractSheets({
 		spreadsheetKey: 'xxx',
 		sheetsToExtract
-	}, function(data) {
+	}, function(err, data) {
+		if (err) {
+			t.fail('should not throw', err);
+		}
 		t.equal(Object.keys(data).length, sheetsToExtract.length, `data should have ${sheetsToExtract.length} sheets`);
 		t.deepEqual(Object.keys(data), sheetsToExtract, `sheets should have correct names`);
 		t.equal(data.Private, undefined, `Private sheet should not be exported`);
