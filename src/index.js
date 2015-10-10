@@ -65,6 +65,9 @@ export function extractSheets({spreadsheetKey, sheetsToExtract, credentials = {}
 
             function getWorkSheetData(name, cb2) {
                 var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
+                if (!worksheet) {
+                  return cb2(null, []);
+                }
                 extractSheet({worksheet, formatCell}, cb2);
             }
 

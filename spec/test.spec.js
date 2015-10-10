@@ -172,3 +172,23 @@ test("extractSheets should produce correct data", (t) => {
 	});
 
 });
+
+test("open invalid spreadsheet should return empty data", (t) => {
+	let sheetsToExtract = ['invalid']
+	try {
+		converter.extractSheets({
+			spreadsheetKey: 'xxx',
+			sheetsToExtract
+		}, function(err, data) {
+			if (err) {
+				t.fail('should not throw', err);
+			}
+
+			t.deepEqual(data.invalid.length, 0, `invalid should have no rows`);
+
+			t.end();
+		});
+	} catch(err) {
+		t.fail('should not throw', err);
+	}
+});
