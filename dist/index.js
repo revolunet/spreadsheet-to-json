@@ -101,6 +101,9 @@ function extractSheets(_x, cb) {
 
             function getWorkSheetData(name, cb2) {
                 var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
+                if (!worksheet) {
+                    return cb2(null, []);
+                }
                 extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2);
             }
 
