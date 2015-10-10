@@ -1,6 +1,6 @@
 {
   "name": "spreadsheet-to-json",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert Google Spreadsheets to JSON using Javascript",
   "license": "MIT",
   "repository": "revolunet/spreadsheet-to-json",
