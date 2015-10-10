@@ -90,7 +90,7 @@ Share the target google spreadsheet with the `client_email` from the credentials
 Package | Version | Dev
 --- |:---:|:---:
 [google-spreadsheet](https://www.npmjs.com/package/google-spreadsheet) | 1.0.1 | ✖
-[lodash](https://www.npmjs.com/package/lodash) | 3.10.0 | ✖
+[lodash](https://www.npmjs.com/package/lodash) | ^3.10.0 | ✖
 [babel-core](https://www.npmjs.com/package/babel-core) | 5.7.3 | ✔
 [babelify](https://www.npmjs.com/package/babelify) | 6.1.2 | ✔
 [eslint](https://www.npmjs.com/package/eslint) | 1.0.0-rc-1 | ✔
