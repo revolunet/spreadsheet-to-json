@@ -15,27 +15,32 @@ let mockData = {
 		id: 1,
 		name: 'Johnny',
 		location: 'Texas',
-		private: true
+		private: true,
+		exoticcolname: true
 	},{
 		id: 2,
 		name: 'Tanguy',
 		location: 'Bangkok',
-		private: true
+		private: true,
+		exoticcolname: true
 	},{
 		id: 3,
 		name: 'Céline',
 		location: 'Paris',
-		private: true
+		private: true,
+		exoticcolname: true
 	},{
 		id: 4,
 		name: 'Camille',
 		location: 'Marseille',
-		private: true
+		private: true,
+		exoticcolname: true
 	},{
 		id: 5,
 		name: 'Raphaël',
 		location: 'Cau',
-		private: true
+		private: true,
+		exoticcolname: true
 	}]
 };
 
@@ -76,8 +81,10 @@ var worksheetMock = tableName => {
 	}
 }
 
+const exoticColName = 'Exotic   Col-NAME';
+
 const exportedFields = {
-	Customers: ['id', 'name', 'location'],
+	Customers: ['id', 'name', 'location', exoticColName],
 	Invoices: ['ref', 'amount'],
 	Leads: [],
 	Private: ['id']
@@ -191,4 +198,20 @@ test("open invalid spreadsheet should return empty data", (t) => {
 	} catch(err) {
 		t.fail('should not throw', err);
 	}
+});
+
+test("columns with exotic names should be handled correctly", (t) => {
+	let sheetsToExtract = ['Customers']
+	converter.extractSheets({
+		spreadsheetKey: 'xxx',
+		sheetsToExtract
+	}, function(err, data) {
+		if (err) {
+			t.fail('should not throw', err);
+		}
+		t.ok(data.Customers[0][exoticColName], `Exotic column name should exist in output`);
+		t.ok(mockData.Customers[0].exoticcolname, `Exotic column name should be renamed in data`);
+		t.equal(data.Customers[0][exoticColName], mockData.Customers[0].exoticcolname, `Exotic column name should be handled correctly`);
+		t.end();
+	});
 });
