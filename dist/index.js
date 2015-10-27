@@ -16,6 +16,12 @@ var _googleSpreadsheet = require('google-spreadsheet');
 
 var _googleSpreadsheet2 = _interopRequireDefault(_googleSpreadsheet);
 
+// internally, col titles are much simpler
+// (due to the fact they are XML nodes in gdocs API)
+function getCleanTitle(title) {
+    return title.toLowerCase().replace(/[ \-#]/gi, '');
+}
+
 /**
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
@@ -55,9 +61,10 @@ function extractSheet(_ref, cb) {
             }
             cb(null, rows.map(function (row) {
                 var cleanRow = {};
+
                 colTitles.forEach(function (title) {
                     // for some reason, keys are lower-cased in google xml api
-                    cleanRow[title] = formatCell(row[title.toLowerCase()] || null, worksheet.title, title);
+                    cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
                 });
                 return cleanRow;
             }));

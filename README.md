@@ -81,7 +81,7 @@ Share the target google spreadsheet with the `client_email` from the credentials
  - **npm run start** : `./node_modules/.bin/babel-node ./index`
  - **npm run readme** : `./node_modules/.bin/node-readme`
  - **npm run test** : `find ./spec -iname '*.spec.js' -exec ./node_modules/.bin/babel-node {} \; | ./node_modules/.bin/tap-spec`
- - **npm run build** : `babel -d ./dist ./src && npm run readme`
+ - **npm run build** : `./node_modules/.bin/babel -d ./dist ./src && npm run readme`
  - **npm run patch** : `npm run -s build && npm version patch && git push && npm publish`
 
 
