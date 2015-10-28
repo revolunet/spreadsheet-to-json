@@ -19,7 +19,7 @@ var _googleSpreadsheet2 = _interopRequireDefault(_googleSpreadsheet);
 // internally, col titles are much simpler
 // (due to the fact they are XML nodes in gdocs API)
 function getCleanTitle(title) {
-    return title.toLowerCase().replace(/[ \-#]/gi, '');
+    return title.toLowerCase().replace(/[ #]/gi, '');
 }
 
 /**

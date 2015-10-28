@@ -5,7 +5,7 @@ import GoogleSpreadsheet from 'google-spreadsheet';
 // internally, col titles are much simpler
 // (due to the fact they are XML nodes in gdocs API)
 function getCleanTitle(title) {
-  return title.toLowerCase().replace(/[ \-#]/gi, '')
+  return title.toLowerCase().replace(/[ #]/gi, '')
 }
 
 /**

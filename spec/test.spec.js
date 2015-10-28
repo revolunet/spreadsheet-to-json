@@ -16,31 +16,31 @@ let mockData = {
 		name: 'Johnny',
 		location: 'Texas',
 		private: true,
-		exoticcolname: true
+		'exoticcol-name': true
 	},{
 		id: 2,
 		name: 'Tanguy',
 		location: 'Bangkok',
 		private: true,
-		exoticcolname: true
+		'exoticcol-name': true
 	},{
 		id: 3,
 		name: 'Céline',
 		location: 'Paris',
 		private: true,
-		exoticcolname: true
+		'exoticcol-name': true
 	},{
 		id: 4,
 		name: 'Camille',
 		location: 'Marseille',
 		private: true,
-		exoticcolname: true
+		'exoticcol-name': true
 	},{
 		id: 5,
 		name: 'Raphaël',
 		location: 'Cau',
 		private: true,
-		exoticcolname: true
+		'exoticcol-name': true
 	}]
 };
 
@@ -210,8 +210,8 @@ test("columns with exotic names should be handled correctly", (t) => {
 			t.fail('should not throw', err);
 		}
 		t.ok(data.Customers[0][exoticColName], `Exotic column name should exist in output`);
-		t.ok(mockData.Customers[0].exoticcolname, `Exotic column name should be renamed in data`);
-		t.equal(data.Customers[0][exoticColName], mockData.Customers[0].exoticcolname, `Exotic column name should be handled correctly`);
+		t.ok(mockData.Customers[0]['exoticcol-name'], `Exotic column name should be renamed in data`);
+		t.equal(data.Customers[0][exoticColName], mockData.Customers[0]['exoticcol-name'], `Exotic column name should be handled correctly`);
 		t.end();
 	});
 });
