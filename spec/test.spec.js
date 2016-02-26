@@ -81,7 +81,7 @@ var worksheetMock = tableName => {
 	}
 }
 
-const exoticColName = 'Exotic   Col-NAME';
+const exoticColName = 'Exotic_   Col-NAME';
 
 const exportedFields = {
 	Customers: ['id', 'name', 'location', exoticColName],
