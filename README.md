@@ -120,7 +120,7 @@ columns with exotic names should be handled correctly
 total:     21
 passing:   21
 duration:  1.9s
-``
+```
 
 
 ## Author
