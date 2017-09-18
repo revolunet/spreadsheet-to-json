@@ -4,11 +4,8 @@ var proxyquire =  require('proxyquire'),
 	test = require('tape');
 
 // python-like xrange
-function* range (begin, end, interval = 1) {
-    for (let i = begin; i < end; i += interval) {
-        yield i;
-    }
-}
+const range = (begin, end, interval = 1) => Array.from({ length: end - begin }, (k, v) => v + begin).filter(x => x % interval === 0)
+
 
 let mockData = {
 	Customers: [{
@@ -44,7 +41,7 @@ let mockData = {
 	}]
 };
 
-mockData.Invoices = [for (i of range(1, 10)) i].map(id => {
+mockData.Invoices = range(1, 10).map(id => {
 	return {
 		id,
 		amount: ''+parseInt(Math.random()*50000,10),
@@ -52,7 +49,7 @@ mockData.Invoices = [for (i of range(1, 10)) i].map(id => {
 	};
 })
 
-mockData.Leads = [for (i of range(1, 10)) i].map(id => {
+mockData.Leads = range(1, 10).map(id => {
 	return {
 		id,
 		estimate: ''+parseInt(Math.random()*50000,10),

@@ -1,9 +1,3 @@
 {
-  "stage": 0,
-  "plugins": [],
-  "env": {
-    "production": {
-      "optional": []
-    }
-  }
+  "presets": ["env", "stage-0"]
 }

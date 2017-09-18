@@ -76,28 +76,51 @@ Create a credentials.json file for your app here : https://console.developers.go
 
 Share the target google spreadsheet with the `client_email` from the credentials.json.
 
-## Scripts
 
- - **npm run start** : `./node_modules/.bin/babel-node ./index`
- - **npm run readme** : `./node_modules/.bin/node-readme`
- - **npm run test** : `find ./spec -iname '*.spec.js' -exec ./node_modules/.bin/babel-node {} \; | ./node_modules/.bin/tap-spec`
- - **npm run build** : `./node_modules/.bin/babel -d ./dist ./src && npm run readme`
- - **npm run patch** : `npm run -s build && npm version patch && git push && npm publish`
+## Tests
+
+```
+extractSheet should produce correct data
+
+✓ sheet should have 5 rows
+✓ row should have 4 properties
+✓ row should have correct properties
+✓ name should be Johnny
+✓ id should be 1
+
+formatCell
+
+✓ names should not be equal
+✓ name should be uppercased
+✓ id should be 1
+
+extractSheets should produce correct data
+
+✓ data should have 3 sheets
+✓ sheets should have correct names
+✓ Private sheet should not be exported
+✓ Customers should have 5 rows
+✓ Customers properties names should equal id,name,location,Exotic_ Col-NAME
+✓ Invoices should have 9 rows
+✓ Invoices properties names should equal ref,amount
+✓ Leads should have 9 rows
+✓ Leads properties names should equal id,estimate,ref
+
+open invalid spreadsheet should return empty data
+
+✓ invalid should have no rows
+
+columns with exotic names should be handled correctly
+
+✓ Exotic column name should exist in output
+✓ Exotic column name should be renamed in data
+✓ Exotic column name should be handled correctly
 
 
-## Dependencies
-
-Package | Version | Dev
---- |:---:|:---:
-[google-spreadsheet](https://www.npmjs.com/package/google-spreadsheet) | 1.0.1 | ✖
-[lodash](https://www.npmjs.com/package/lodash) | ^3.10.0 | ✖
-[babel-core](https://www.npmjs.com/package/babel-core) | 5.7.3 | ✔
-[babelify](https://www.npmjs.com/package/babelify) | 6.1.2 | ✔
-[eslint](https://www.npmjs.com/package/eslint) | 1.0.0-rc-1 | ✔
-[node-readme](https://www.npmjs.com/package/node-readme) | 0.1.8 | ✔
-[proxyquire](https://www.npmjs.com/package/proxyquire) | 1.6.0 | ✔
-[tap-spec](https://www.npmjs.com/package/tap-spec) | 4.0.2 | ✔
-[tape](https://www.npmjs.com/package/tape) | 4.0.0 | ✔
+total:     21
+passing:   21
+duration:  1.9s
+``
 
 
 ## Author

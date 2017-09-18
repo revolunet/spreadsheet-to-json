@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import GoogleSpreadsheet from 'google-spreadsheet';
 

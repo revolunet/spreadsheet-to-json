@@ -13,11 +13,9 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "start": "./node_modules/.bin/babel-node ./index",
-    "readme": "./node_modules/.bin/node-readme",
-    "test": "find ./spec -iname '*.spec.js' -exec ./node_modules/.bin/babel-node {} \\; | ./node_modules/.bin/tap-spec",
-    "build": "./node_modules/.bin/babel -d ./dist ./src && npm run readme",
-    "patch": "npm run -s build && npm version patch && git push && npm publish"
+    "start": "babel-node ./index",
+    "test": "find ./spec -iname '*.spec.js' -exec babel-node {} \\; | tap-spec",
+    "build": "babel -d ./dist ./src && npm run readme"
   },
   "main": "dist/index.js",
   "keywords": [
@@ -27,14 +25,13 @@
     "drive"
   ],
   "dependencies": {
-    "google-spreadsheet": "1.0.1",
-    "lodash": "^3.10.0"
+    "google-spreadsheet": "1.0.1"
   },
   "devDependencies": {
-    "babel-core": "5.7.3",
-    "babelify": "6.1.2",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-0": "^6.24.1",
     "eslint": "1.0.0-rc-1",
-    "node-readme": "0.1.8",
     "proxyquire": "1.6.0",
     "tap-spec": "4.0.2",
     "tape": "4.0.0"
