@@ -15,7 +15,7 @@
   "scripts": {
     "start": "babel-node ./index",
     "test": "find ./spec -iname '*.spec.js' -exec babel-node {} \\; | tap-spec",
-    "build": "babel -d ./dist ./src && npm run readme"
+    "build": "babel -d ./dist ./src"
   },
   "main": "dist/index.js",
   "keywords": [
