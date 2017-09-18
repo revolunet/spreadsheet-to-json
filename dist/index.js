@@ -1,12 +1,10 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.extractSheet = extractSheet;
 exports.extractSheets = extractSheets;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _fs = require('fs');
 
@@ -15,6 +13,8 @@ var _fs2 = _interopRequireDefault(_fs);
 var _googleSpreadsheet = require('google-spreadsheet');
 
 var _googleSpreadsheet2 = _interopRequireDefault(_googleSpreadsheet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // internally, col titles are much simpler
 // (due to the fact they are XML nodes in gdocs API)
@@ -26,11 +26,10 @@ function getCleanTitle(title) {
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-
 function extractSheet(_ref, cb) {
-    var worksheet = _ref.worksheet;
-    var _ref$formatCell = _ref.formatCell;
-    var formatCell = _ref$formatCell === undefined ? function (a) {
+    var worksheet = _ref.worksheet,
+        _ref$formatCell = _ref.formatCell,
+        formatCell = _ref$formatCell === undefined ? function (a) {
         return a;
     } : _ref$formatCell;
 
@@ -75,20 +74,20 @@ function extractSheet(_ref, cb) {
 /**
  * fetch N sheets from the given spreadsheet and return a single JSON using extractSheet function
  */
-
-function extractSheets(_x, cb) {
-    var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-    var spreadsheetKey = _ref2.spreadsheetKey;
-    var sheetsToExtract = _ref2.sheetsToExtract;
-    var _ref2$credentials = _ref2.credentials;
-    var credentials = _ref2$credentials === undefined ? {} : _ref2$credentials;
-    var _ref2$formatCell = _ref2.formatCell;
-    var formatCell = _ref2$formatCell === undefined ? function (a) {
+function extractSheets() {
+    var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        spreadsheetKey = _ref2.spreadsheetKey,
+        sheetsToExtract = _ref2.sheetsToExtract,
+        _ref2$credentials = _ref2.credentials,
+        credentials = _ref2$credentials === undefined ? {} : _ref2$credentials,
+        _ref2$formatCell = _ref2.formatCell,
+        formatCell = _ref2$formatCell === undefined ? function (a) {
         return a;
     } : _ref2$formatCell;
 
-    var spreadSheet = new _googleSpreadsheet2['default'](spreadsheetKey);
+    var cb = arguments[1];
+
+    var spreadSheet = new _googleSpreadsheet2.default(spreadsheetKey);
     spreadSheet.useServiceAccountAuth(credentials, function (err) {
         if (err) {
             return cb(err);
@@ -127,6 +126,4 @@ function extractSheets(_x, cb) {
             });
         });
     });
-}
-
-;
+};
