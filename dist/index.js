@@ -71,6 +71,42 @@ function extractSheet(_ref, cb) {
     }
 }
 
+function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb) {
+    spreadSheet.getInfo(function (err, sheetInfo) {
+        if (err) {
+            return cb(err);
+        }
+
+        var sheetsNames = sheetInfo.worksheets.map(function (sheet) {
+            return sheet.title;
+        });
+        var results = {};
+        if (sheetsToExtract.length === 0) {
+            sheetsToExtract = sheetsNames;
+        }
+
+        function getWorkSheetData(name, cb2) {
+            var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
+            if (!worksheet) {
+                return cb2(null, []);
+            }
+            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2);
+        }
+
+        sheetsToExtract.map(function (table) {
+            getWorkSheetData(table, function (err, data) {
+                if (err) {
+                    return cb(err);
+                }
+                results[table] = data;
+                if (Object.keys(results).length === sheetsToExtract.length) {
+                    cb(null, results);
+                }
+            });
+        });
+    });
+}
+
 /**
  * fetch N sheets from the given spreadsheet and return a single JSON using extractSheet function
  */
@@ -88,42 +124,15 @@ function extractSheets() {
     var cb = arguments[1];
 
     var spreadSheet = new _googleSpreadsheet2.default(spreadsheetKey);
+
+    if (!credentials) {
+        return doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb);
+    }
+
     spreadSheet.useServiceAccountAuth(credentials, function (err) {
         if (err) {
             return cb(err);
         }
-        spreadSheet.getInfo(function (err, sheetInfo) {
-            if (err) {
-                return cb(err);
-            }
-
-            var sheetsNames = sheetInfo.worksheets.map(function (sheet) {
-                return sheet.title;
-            });
-            var results = {};
-            if (sheetsToExtract.length === 0) {
-                sheetsToExtract = sheetsNames;
-            }
-
-            function getWorkSheetData(name, cb2) {
-                var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
-                if (!worksheet) {
-                    return cb2(null, []);
-                }
-                extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2);
-            }
-
-            sheetsToExtract.map(function (table) {
-                getWorkSheetData(table, function (err, data) {
-                    if (err) {
-                        return cb(err);
-                    }
-                    results[table] = data;
-                    if (Object.keys(results).length === sheetsToExtract.length) {
-                        cb(null, results);
-                    }
-                });
-            });
-        });
+        doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb);
     });
 };
