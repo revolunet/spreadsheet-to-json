@@ -12,26 +12,30 @@ The final JSON is based on sheets names and column titles and finally looks like
 
 ```json
 {
-    "Customers": [{
-            "name": "Sony",
-            "country": "Japan"
-        },{
-            "name": "Renault",
-            "country": "France"
-        }
-    ],
-    "Invoices":  [{
-            "id": "F0001",
-            "totalAmount": "12367.12"
-        },{
-            "name": "F0002",
-            "totalAmount": "4398.2"
-        }
-    ]
+  "Customers": [
+    {
+      "name": "Sony",
+      "country": "Japan"
+    },
+    {
+      "name": "Renault",
+      "country": "France"
+    }
+  ],
+  "Invoices": [
+    {
+      "id": "F0001",
+      "totalAmount": "12367.12"
+    },
+    {
+      "name": "F0002",
+      "totalAmount": "4398.2"
+    }
+  ]
 }
 ```
 
-This is useful when you let people edit spreadsheets and need to work with the data.
+This can be useful when you want people edit spreadsheets and need to work with the data.
 
 
 ## Install
@@ -51,7 +55,7 @@ var formatCell = function(sheetTitle, columnTitle, value) {
 extractSheets({
     // your google spreadhsheet key
     spreadsheetKey: 'abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc',
-    // your google oauth2 credentials
+    // your google oauth2 credentials (optional for world-readable spreadsheets)
     credentials: require('./google-generated-creds.json'),
     // names of the sheet you want to extract (or [] for all)
     sheetsToExtract: ['Customers', 'Invoices'],
