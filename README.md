@@ -1,6 +1,6 @@
 # spreadsheet-to-json
 
-![npm](https://img.shields.io/npm/v/spreadsheet-to-json.svg) ![license](https://img.shields.io/npm/l/spreadsheet-to-json.svg) ![github-issues](https://img.shields.io/github/issues/revolunet/spreadsheet-to-json.svg) ![Circle CI build status](https://circleci.com/gh/revolunet/spreadsheet-to-json.svg?style=svg)
+![npm](https://img.shields.io/npm/v/spreadsheet-to-json.svg) ![license](https://img.shields.io/npm/l/spreadsheet-to-json.svg) ![github-issues](https://img.shields.io/github/issues/revolunet/spreadsheet-to-json.svg) [![Circle CI build status](https://circleci.com/gh/revolunet/spreadsheet-to-json.svg?style=svg)](https://circleci.com/gh/revolunet/spreadsheet-to-json)
 
 ![nodei.co](https://nodei.co/npm/spreadsheet-to-json.png?downloads=true&downloadRank=true&stars=true)
 
