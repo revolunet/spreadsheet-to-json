@@ -45,12 +45,10 @@ This can be useful when you want people edit spreadsheets and need to work with 
 ## QuickStart
 
 ```js
-var extractSheets = require('spreadsheet-to-json');
+const { extractSheets } = require('spreadsheet-to-json');
 
 // optional custom format cell function
-var formatCell = function(sheetTitle, columnTitle, value) {
-    return value.toUpperCase();
-};
+const formatCell = (sheetTitle, columnTitle, value) =>  value.toUpperCase();
 
 extractSheets({
     // your google spreadhsheet key
