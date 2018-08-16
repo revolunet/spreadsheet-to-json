@@ -59,7 +59,7 @@ extractSheets({
     sheetsToExtract: ['Customers', 'Invoices'],
     // custom function to parse the cells
     formatCell: formatCell
-}, function(data) {
+}, function(err, data) {
     console.log('Customers: ', data.Customers);
     console.log('Invoices: ', data.Invoices);
 });
