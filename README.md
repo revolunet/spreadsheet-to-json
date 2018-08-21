@@ -55,9 +55,9 @@ extractSheets(
     spreadsheetKey: "abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc",
     // your google oauth2 credentials (optional for world-readable spreadsheets)
     credentials: require("./google-generated-creds.json"),
-    // names of the sheet you want to extract (or [] for all)
+    // optional: names of the sheets you want to extract
     sheetsToExtract: ["Customers", "Invoices"],
-    // custom function to parse the cells
+    // optional: custom function to parse the cells
     formatCell: formatCell
   },
   function(err, data) {

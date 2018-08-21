@@ -16,40 +16,35 @@ let mockData = {
       name: "Johnny",
       location: "Texas",
       private: true,
-      "exoticcol-name": true,
-      "exoticcol-\\n#ame2": true
+      "exoticcol-name": true
     },
     {
       id: 2,
       name: "Tanguy",
       location: "Bangkok",
       private: true,
-      "exoticcol-name": true,
-      "exoticcol-\\n#ame2": true
+      "exoticcol-name": true
     },
     {
       id: 3,
       name: "Céline",
       location: "Paris",
       private: true,
-      "exoticcol-name": true,
-      "exoticcol-\\n#ame2": true
+      "exoticcol-name": true
     },
     {
       id: 4,
       name: "Camille",
       location: "Marseille",
       private: true,
-      "exoticcol-name": true,
-      "exoticcol-\\n#ame2": true
+      "exoticcol-name": true
     },
     {
       id: 5,
       name: "Raphaël",
       location: "Cau",
       private: true,
-      "exoticcol-name": true,
-      "exoticcol-\\n#ame2": true
+      "exoticcol-name": true
     }
   ]
 };
@@ -94,7 +89,8 @@ var worksheetMock = tableName => {
   };
 };
 
-const exoticColName = "Exotic_   Col-NAME";
+const exoticColName = "Exotic_ :/  Col-NAME";
+const fixedColName = "exoticcol-name";
 
 const exportedFields = {
   Customers: ["id", "name", "location", exoticColName],
@@ -232,7 +228,7 @@ test("extractSheets should produce correct data", t => {
           `${sheetName} should have ${mockData[sheetName].length} rows`
         );
 
-        var expectedFields = exportedFields[sheetName].length
+        let expectedFields = exportedFields[sheetName].length
           ? exportedFields[sheetName]
           : Object.keys(mockData[sheetName][0]);
         t.deepEqual(
@@ -284,15 +280,6 @@ test("columns with exotic names should be handled correctly", t => {
       t.ok(
         data.Customers[0][exoticColName],
         `Exotic column name should exist in output`
-      );
-      t.ok(
-        mockData.Customers[0]["exoticcol-name"],
-        `Exotic column name should be renamed in data`
-      );
-      t.equal(
-        data.Customers[0][exoticColName],
-        mockData.Customers[0]["exoticcol-name"],
-        `Exotic column name should be handled correctly`
       );
       t.end();
     }

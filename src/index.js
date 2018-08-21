@@ -1,9 +1,9 @@
-const fs = require("fs");
 const GoogleSpreadsheet = require("google-spreadsheet");
 
 // internally, col titles are much simpler
 // (due to the fact they are XML nodes in gdocs API)
-const getCleanTitle = title => title.toLowerCase().replace(/[ #_]/gi, "");
+const getCleanTitle = title =>
+  title.toLowerCase().replace(/[ _:\/#\|@\\]/gi, "");
 
 const fetchData = (worksheet, colTitles, formatCell, cb) => {
   worksheet.getRows(
@@ -48,11 +48,11 @@ const extractSheet = ({ worksheet, formatCell = a => a }, cb) => {
       "min-col": 1,
       "max-col": parseInt(worksheet.colCount, 10)
     },
-    function(err, rows) {
+    (err, rows) => {
       if (err) {
         return cb(err);
       }
-      var colTitles = rows.map(row => row.value);
+      const colTitles = rows.map(row => row.value);
       // then fetch datas
       fetchData(worksheet, colTitles, formatCell, cb);
     }
@@ -65,19 +65,19 @@ const extractSheetsFromSpreadsheet = (
   formatCell = a => a,
   cb
 ) => {
-  spreadSheet.getInfo(function(err, sheetInfo) {
+  spreadSheet.getInfo((err, sheetInfo) => {
     if (err) {
       return cb(err);
     }
 
-    var sheetsNames = sheetInfo.worksheets.map(sheet => sheet.title);
-    var results = {};
+    const sheetsNames = sheetInfo.worksheets.map(sheet => sheet.title);
+    const results = {};
     if (sheetsToExtract.length === 0) {
       sheetsToExtract = sheetsNames;
     }
 
     const getWorkSheetData = (name, cb2) => {
-      var worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
+      const worksheet = sheetInfo.worksheets[sheetsNames.indexOf(name)];
       if (!worksheet) {
         return cb2(null, []);
       }
@@ -104,13 +104,13 @@ const extractSheetsFromSpreadsheet = (
 const extractSheets = (
   {
     spreadsheetKey,
-    sheetsToExtract,
-    credentials = {},
+    sheetsToExtract = [],
+    credentials,
     formatCell = a => a
   } = {},
   cb
 ) => {
-  var spreadSheet = new GoogleSpreadsheet(spreadsheetKey);
+  const spreadSheet = new GoogleSpreadsheet(spreadsheetKey);
 
   if (!credentials) {
     return extractSheetsFromSpreadsheet(
@@ -121,7 +121,7 @@ const extractSheets = (
     );
   }
 
-  spreadSheet.useServiceAccountAuth(credentials, function(err) {
+  spreadSheet.useServiceAccountAuth(credentials, err => {
     if (err) {
       return cb(err);
     }
