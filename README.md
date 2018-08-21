@@ -67,6 +67,8 @@ extractSheets(
 );
 ```
 
+see [./example.js](./example.js)
+
 ## Authentification
 
 Create a credentials.json file for your app here : https://console.developers.google.com/
@@ -74,7 +76,7 @@ Create a credentials.json file for your app here : https://console.developers.go
 - create a new project
 - enable the Drive API
 - in **credentials**, select **create new credentials** then **service account** and save the generated JSON. (privately)
-- the give the JSON contents to the `credentials` parameter in the `extractSheets` call.
+- then give the JSON contents to the `credentials` parameter in the `extractSheets` call.
 
 Share the target google spreadsheet with the `client_email` from the credentials.json.
 
