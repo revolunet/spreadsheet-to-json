@@ -26,7 +26,7 @@ function getCleanTitle(title) {
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-function extractSheet(_ref, cb) {
+function extractSheet(_ref, cb, rowToConcat) {
     var worksheet = _ref.worksheet,
         _ref$formatCell = _ref.formatCell,
         formatCell = _ref$formatCell === undefined ? function (a) {
@@ -62,8 +62,22 @@ function extractSheet(_ref, cb) {
                 var cleanRow = {};
 
                 colTitles.forEach(function (title) {
-                    // for some reason, keys are lower-cased in google xml api
-                    cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+                    if (rowToConcat) {
+                        var res = rowToConcat.find(function (element) {
+                            return element === title;
+                        });
+                    } else {
+                        var res = 0;
+                    }
+                    if (Array.isArray(cleanRow[title]) && res) {
+                        var position = cleanRow[title].length + 1;
+                        cleanRow[title].push(row[title + '_' + position]);
+                    } else if (cleanRow[title] && res) {
+                        cleanRow[title] = [cleanRow[title], row[title + '_2']];
+                    } else {
+                        // for some reason, keys are lower-cased in google xml api
+                        cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+                    }
                 });
                 return cleanRow;
             }));
@@ -71,7 +85,7 @@ function extractSheet(_ref, cb) {
     }
 }
 
-function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb) {
+function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, rowToConcat) {
     spreadSheet.getInfo(function (err, sheetInfo) {
         if (err) {
             return cb(err);
@@ -90,7 +104,7 @@ function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb) {
             if (!worksheet) {
                 return cb2(null, []);
             }
-            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2);
+            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2, rowToConcat);
         }
 
         sheetsToExtract.map(function (table) {
@@ -114,6 +128,7 @@ function extractSheets() {
     var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         spreadsheetKey = _ref2.spreadsheetKey,
         sheetsToExtract = _ref2.sheetsToExtract,
+        rowToConcat = _ref2.rowToConcat,
         _ref2$credentials = _ref2.credentials,
         credentials = _ref2$credentials === undefined ? {} : _ref2$credentials,
         _ref2$formatCell = _ref2.formatCell,
@@ -126,13 +141,13 @@ function extractSheets() {
     var spreadSheet = new _googleSpreadsheet2.default(spreadsheetKey);
 
     if (!credentials) {
-        return doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb);
+        return doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, rowToConcat);
     }
 
     spreadSheet.useServiceAccountAuth(credentials, function (err) {
         if (err) {
             return cb(err);
         }
-        doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb);
+        doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, rowToConcat);
     });
 };
