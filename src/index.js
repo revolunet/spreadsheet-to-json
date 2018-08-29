@@ -56,7 +56,6 @@ export function extractSheet({worksheet, formatCell = a => a}, cb, rowToConcat) 
                         // for some reason, keys are lower-cased in google xml api
                         cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
                     }
-                    console.log(cleanRow[title])
                 });
                 return cleanRow;
             }));
