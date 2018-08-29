@@ -212,21 +212,47 @@ test("columns with exotic names should be handled correctly", (t) => {
 	});
 });
 
-test("columns with identical names should produce array data", (t) => {
+test("toArray (option)", (t) => {
 	var spreadsheetKey = '1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA';
 	var convert = proxyquire('../src/index', { 'path': {} });
 	convert.extractSheets({
 		spreadsheetKey: spreadsheetKey,
 		credentials: require('./credentials'),
 		sheetsToExtract: [],
-		rowToConcat: ['wrong']
+		toArray: ['wrong']
 	}, function(err, data) {
 		if (err) {
 			t.fail('should not throw', err);
 		}
 		var sheet = 'Feuille 1';
+		var expectedFields = ['question', 'good', 'wrong']
+		t.equal(data[sheet].length, 2, 'Sheet should contain 2 objects')
+		t.deepEqual(Object.keys(data[sheet][0]), expectedFields, `Sheet properties names should equal ${expectedFields}`);
 		t.ok(Array.isArray(data[sheet][0].wrong), `Wrong element should exist in output as an array`);
 		t.equal(data[sheet][0].wrong.length, 3, 'First object should contain a wrong array with three elements');
+		t.end();
+	});
+});
+
+test("toColumn (option)", (t) => {
+	var spreadsheetKey = '1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA';
+	var convert = proxyquire('../src/index', { 'path': {} });
+	convert.extractSheets({
+		spreadsheetKey: spreadsheetKey,
+		credentials: require('./credentials'),
+		sheetsToExtract: [],
+		toColumn: ['wrong']
+	}, function(err, data) {
+		if (err) {
+			t.fail('should not throw', err);
+		}
+		var sheet = 'Feuille 1';
+		var expectedFields = ['question', 'good', 'wrong', 'wrong_2', 'wrong_3']
+		t.equal(data[sheet].length, 2, 'Sheet should contain 2 objects')
+		t.deepEqual(Object.keys(data[sheet][0]), expectedFields, `Sheet properties names should equal ${expectedFields}`);
+		t.ok(!Array.isArray(data[sheet][0].wrong), `Wrong element should not be an array`);
+		t.equal(data[sheet][0].wrong, 'red', 'Wrong object in first object should contain red')
+
 		t.end();
 	});
 });

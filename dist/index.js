@@ -26,7 +26,7 @@ function getCleanTitle(title) {
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-function extractSheet(_ref, cb, rowToConcat) {
+function extractSheet(_ref, cb, toArray, toColumn) {
     var worksheet = _ref.worksheet,
         _ref$formatCell = _ref.formatCell,
         formatCell = _ref$formatCell === undefined ? function (a) {
@@ -62,21 +62,38 @@ function extractSheet(_ref, cb, rowToConcat) {
                 var cleanRow = {};
 
                 colTitles.forEach(function (title) {
-                    if (rowToConcat) {
-                        var res = rowToConcat.find(function (element) {
+                    var titleToArray,
+                        titleToColumn = 0;
+                    if (toArray) {
+                        titleToArray = toArray.find(function (element) {
                             return element === title;
                         });
-                    } else {
-                        var res = 0;
                     }
-                    if (Array.isArray(cleanRow[title]) && res) {
-                        var position = cleanRow[title].length + 1;
-                        cleanRow[title].push(formatCell(row[title + '_' + position] || null, worksheet.title, title));
-                    } else if (cleanRow[title] && res) {
-                        cleanRow[title] = [cleanRow[title], formatCell(row[title + '_2'] || null, worksheet.title, title)];
+                    if (toColumn) {
+                        titleToColumn = toColumn.find(function (element) {
+                            return element === title;
+                        });
+                    }
+                    if (!titleToColumn && titleToArray) {
+                        if (Array.isArray(cleanRow[title]) && titleToArray) {
+                            var position = cleanRow[title].length + 1;
+                            cleanRow[title].push(formatCell(row[title + '_' + position] || null, worksheet.title, title));
+                        } else if (cleanRow[title] && titleToArray) {
+                            cleanRow[title] = [cleanRow[title], formatCell(row[title + '_2'] || null, worksheet.title, title)];
+                        } else {
+                            // for some reason, keys are lower-cased in google xml api
+                            cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+                        }
                     } else {
-                        // for some reason, keys are lower-cased in google xml api
-                        cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+                        if (!cleanRow[title]) {
+                            cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+                        } else {
+                            var position = 2;
+                            while (cleanRow[title + '_' + position]) {
+                                position++;
+                            }
+                            cleanRow[title + '_' + position] = formatCell(row[title + '_' + position] || null, worksheet.title, title + '_' + position);
+                        }
                     }
                 });
                 return cleanRow;
@@ -85,7 +102,7 @@ function extractSheet(_ref, cb, rowToConcat) {
     }
 }
 
-function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, rowToConcat) {
+function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, toArray, toColumn) {
     spreadSheet.getInfo(function (err, sheetInfo) {
         if (err) {
             return cb(err);
@@ -104,7 +121,7 @@ function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, rowToConc
             if (!worksheet) {
                 return cb2(null, []);
             }
-            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2, rowToConcat);
+            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2, toArray, toColumn);
         }
 
         sheetsToExtract.map(function (table) {
@@ -128,7 +145,8 @@ function extractSheets() {
     var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         spreadsheetKey = _ref2.spreadsheetKey,
         sheetsToExtract = _ref2.sheetsToExtract,
-        rowToConcat = _ref2.rowToConcat,
+        toArray = _ref2.toArray,
+        toColumn = _ref2.toColumn,
         _ref2$credentials = _ref2.credentials,
         credentials = _ref2$credentials === undefined ? {} : _ref2$credentials,
         _ref2$formatCell = _ref2.formatCell,
@@ -141,13 +159,13 @@ function extractSheets() {
     var spreadSheet = new _googleSpreadsheet2.default(spreadsheetKey);
 
     if (!credentials) {
-        return doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, rowToConcat);
+        return doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, toArray, toColumn);
     }
 
     spreadSheet.useServiceAccountAuth(credentials, function (err) {
         if (err) {
             return cb(err);
         }
-        doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, rowToConcat);
+        doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, toArray, toColumn);
     });
 };

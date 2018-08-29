@@ -124,15 +124,25 @@ columns with exotic names should be handled correctly
 ✓ Exotic column name should be renamed in data
 ✓ Exotic column name should be handled correctly
 
-columns with identical names should produce array data
+toArray (option)
 
-✓ 'Wrong' column name should exist in output as an array
-✓ First object should contain a wrong array with three elements
+✔ Sheet should contain 2 objects
+✔ Sheet properties names should equal question,good,wrong
+✔ Wrong element should exist in output as an array
+✔ First object should contain a wrong array with three elements
+
+toColumn (option)
+
+✔ Sheet should contain 2 objects
+✔ Sheet properties names should equal question,good,wrong,wrong_2,wrong_3
+✔ Wrong element should not be an array
+✔ Wrong object in first object should contain red
 
 
-total:     21
-passing:   21
-duration:  1.9s
+
+total:     29
+passing:   29
+duration:  3s
 ```
 
 
