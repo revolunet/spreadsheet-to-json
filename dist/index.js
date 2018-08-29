@@ -71,9 +71,9 @@ function extractSheet(_ref, cb, rowToConcat) {
                     }
                     if (Array.isArray(cleanRow[title]) && res) {
                         var position = cleanRow[title].length + 1;
-                        cleanRow[title].push(row[title + '_' + position]);
+                        cleanRow[title].push(formatCell(row[getCleanTitle(title + '_' + position)] || null, worksheet.title, title));
                     } else if (cleanRow[title] && res) {
-                        cleanRow[title] = [cleanRow[title], row[title + '_2']];
+                        cleanRow[title] = [cleanRow[title], formatCell(row[getCleanTitle(title + '_2')] || null, worksheet.title, title)];
                     } else {
                         // for some reason, keys are lower-cased in google xml api
                         cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
