@@ -81,6 +81,12 @@ Share the target google spreadsheet with the `client_email` from the credentials
 
 ## Tests
 
+If you want to test the package with "npm test", you have to create a credentials.json file here: https://console.developers.google.com/
+Follow `Authentification` instructions except the last one: the target google spreadsheet is already shared with everybody.
+You will have to copy your credetials.json in the test folder.
+You now can "npm test".
+
+
 ```
 extractSheet should produce correct data
 
@@ -117,6 +123,11 @@ columns with exotic names should be handled correctly
 ✓ Exotic column name should exist in output
 ✓ Exotic column name should be renamed in data
 ✓ Exotic column name should be handled correctly
+
+columns with identical names should produce array data
+
+✓ Wrong column name should exist in output as an array
+✓ First object should contain a wrong array with three elements
 
 
 total:     21

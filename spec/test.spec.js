@@ -59,7 +59,6 @@ mockData.Leads = range(1, 10).map(id => {
 
 mockData.Private = [{id:42, secret: 'stuff'}];
 
-
 var worksheetMock = tableName => {
 	return {
 		title: tableName,
@@ -84,7 +83,7 @@ const exportedFields = {
 	Customers: ['id', 'name', 'location', exoticColName],
 	Invoices: ['ref', 'amount'],
 	Leads: [],
-	Private: ['id']
+	Private: ['id'],
 };
 
 const sheetMock = {
@@ -209,6 +208,25 @@ test("columns with exotic names should be handled correctly", (t) => {
 		t.ok(data.Customers[0][exoticColName], `Exotic column name should exist in output`);
 		t.ok(mockData.Customers[0]['exoticcol-name'], `Exotic column name should be renamed in data`);
 		t.equal(data.Customers[0][exoticColName], mockData.Customers[0]['exoticcol-name'], `Exotic column name should be handled correctly`);
+		t.end();
+	});
+});
+
+test("columns with identical names should produce array data", (t) => {
+	var spreadsheetKey = '1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA';
+	var convert = proxyquire('../src/index', { 'path': {} });
+	convert.extractSheets({
+		spreadsheetKey: spreadsheetKey,
+		credentials: require('./credentials'),
+		sheetsToExtract: [],
+		rowToConcat: ['wrong']
+	}, function(err, data) {
+		if (err) {
+			t.fail('should not throw', err);
+		}
+		var sheet = 'Feuille 1';
+		t.ok(Array.isArray(data[sheet][0].wrong), `Wrong element should exist in output as an array`);
+		t.equal(data[sheet][0].wrong.length, 3, 'First object should contain a wrong array with three elements');
 		t.end();
 	});
 });
