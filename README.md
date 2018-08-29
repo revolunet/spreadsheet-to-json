@@ -126,7 +126,7 @@ columns with exotic names should be handled correctly
 
 columns with identical names should produce array data
 
-✓ Wrong column name should exist in output as an array
+✓ 'Wrong' column name should exist in output as an array
 ✓ First object should contain a wrong array with three elements
 
 
