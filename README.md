@@ -66,9 +66,21 @@ extractSheets({
 
 ```
 
+## Authentification
+
+Create a credentials.json file for your app here : https://console.developers.google.com/
+
+ - create a new project
+ - enable the Drive API
+ - in **credentials**, select **create new client id** then **service account** and save the generated JSON. (privately)
+ - the just paste the JSON contents as `credentials` in the `extractSheets` call.
+
+Share the target google spreadsheet with the `client_email` from the credentials.json.
+
+
 ## Specials Flags
 You also can use two flags: toArray and toColumn.
-The above exemples use this worksheet: https://docs.google.com/spreadsheets/d/1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA/edit#gid=0 :
+The following exemples use this worksheet: https://docs.google.com/spreadsheets/d/1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA/edit#gid=0 :
 
 
 ### FLAG "toArray"
@@ -141,19 +153,6 @@ extractSheets({
 ```
 
 IMPORTANT: If you use toArray and toColumn flags on the same name, toArray will be used.
-
-
-## Authentification
-
-Create a credentials.json file for your app here : https://console.developers.google.com/
-
- - create a new project
- - enable the Drive API
- - in **credentials**, select **create new client id** then **service account** and save the generated JSON. (privately)
- - the just paste the JSON contents as `credentials` in the `extractSheets` call.
-
-Share the target google spreadsheet with the `client_email` from the credentials.json.
-
 
 ## Tests
 
