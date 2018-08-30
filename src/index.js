@@ -37,7 +37,7 @@ function getCleanRow(formatCell, row, title, cleanRow, worksheet, titleToArray) 
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-export function extractSheet({worksheet, formatCell = a => a}, cb, toArray, toColumn, formatCel) {
+export function extractSheet({worksheet, formatCell = a => a}, cb, toArray, toColumn) {
     // fetch column headers first
     worksheet.getCells({
         'min-row': 1,
@@ -101,7 +101,7 @@ function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, toArray, 
           if (!worksheet) {
             return cb2(null, []);
           }
-          extractSheet({worksheet, formatCell}, cb2, toArray, toColumn, worksheet, formatCell);
+          extractSheet({worksheet, formatCell}, cb2, toArray, toColumn);
       }
 
       sheetsToExtract.map(table => {

@@ -50,7 +50,7 @@ function getCleanRow(formatCell, row, title, cleanRow, worksheet, titleToArray) 
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-function extractSheet(_ref, cb, toArray, toColumn, formatCel) {
+function extractSheet(_ref, cb, toArray, toColumn) {
     var worksheet = _ref.worksheet,
         _ref$formatCell = _ref.formatCell,
         formatCell = _ref$formatCell === undefined ? function (a) {
@@ -129,7 +129,7 @@ function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, toArray, 
             if (!worksheet) {
                 return cb2(null, []);
             }
-            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2, toArray, toColumn, worksheet, formatCell);
+            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2, toArray, toColumn);
         }
 
         sheetsToExtract.map(function (table) {
