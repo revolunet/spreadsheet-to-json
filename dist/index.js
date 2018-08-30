@@ -22,11 +22,35 @@ function getCleanTitle(title) {
     return title.toLowerCase().replace(/[ #_]/gi, '');
 }
 
+function getCleanRowToColumns(formatCell, row, title, cleanRow, worksheet) {
+    if (!cleanRow[title]) {
+        cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+    } else {
+        var position = 2;
+        while (cleanRow[title + '_' + position]) {
+            position++;
+        }
+        cleanRow[title + '_' + position] = formatCell(row[title + '_' + position] || null, worksheet.title, title + '_' + position);
+    }
+}
+
+function getCleanRow(formatCell, row, title, cleanRow, worksheet, titleToArray) {
+    if (Array.isArray(cleanRow[title]) && titleToArray) {
+        var position = cleanRow[title].length + 1;
+        cleanRow[title].push(formatCell(row[title + '_' + position] || null, worksheet.title, title));
+    } else if (cleanRow[title] && titleToArray) {
+        cleanRow[title] = [cleanRow[title], formatCell(row[title + '_2'] || null, worksheet.title, title)];
+    } else {
+        // for some reason, keys are lower-cased in google xml api
+        cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+    }
+}
+
 /**
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-function extractSheet(_ref, cb, toArray, toColumn) {
+function extractSheet(_ref, cb, toArray, toColumn, formatCel) {
     var worksheet = _ref.worksheet,
         _ref$formatCell = _ref.formatCell,
         formatCell = _ref$formatCell === undefined ? function (a) {
@@ -75,25 +99,9 @@ function extractSheet(_ref, cb, toArray, toColumn) {
                         });
                     }
                     if (!titleToColumn && titleToArray) {
-                        if (Array.isArray(cleanRow[title]) && titleToArray) {
-                            var position = cleanRow[title].length + 1;
-                            cleanRow[title].push(formatCell(row[title + '_' + position] || null, worksheet.title, title));
-                        } else if (cleanRow[title] && titleToArray) {
-                            cleanRow[title] = [cleanRow[title], formatCell(row[title + '_2'] || null, worksheet.title, title)];
-                        } else {
-                            // for some reason, keys are lower-cased in google xml api
-                            cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
-                        }
+                        getCleanRow(formatCell, row, title, cleanRow, worksheet, titleToArray);
                     } else {
-                        if (!cleanRow[title]) {
-                            cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
-                        } else {
-                            var position = 2;
-                            while (cleanRow[title + '_' + position]) {
-                                position++;
-                            }
-                            cleanRow[title + '_' + position] = formatCell(row[title + '_' + position] || null, worksheet.title, title + '_' + position);
-                        }
+                        getCleanRowToColumns(formatCell, row, title, cleanRow, worksheet);
                     }
                 });
                 return cleanRow;
@@ -121,7 +129,7 @@ function doExtractSheets(spreadSheet, sheetsToExtract, formatCell, cb, toArray, 
             if (!worksheet) {
                 return cb2(null, []);
             }
-            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2, toArray, toColumn);
+            extractSheet({ worksheet: worksheet, formatCell: formatCell }, cb2, toArray, toColumn, worksheet, formatCell);
         }
 
         sheetsToExtract.map(function (table) {
