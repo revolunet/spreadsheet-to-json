@@ -66,6 +66,82 @@ extractSheets({
 
 ```
 
+## Specials Flags
+You also can use two flags: toArray and toColumn.
+The above exemples use this worksheet: https://docs.google.com/spreadsheets/d/1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA/edit#gid=0 :
+
+
+### FLAG "toArray"
+This flag allow to concatenate data of the columns with the same title
+```js
+const { extractSheets } = require('spreadsheet-to-json');
+
+extractSheets({
+    // your google spreadhsheet key
+    spreadsheetKey: '1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA',
+    // your google oauth2 credentials
+    credentials: require('./google-generated-creds.json'),
+    // names of the sheet you want to extract (or [] for all)
+    sheetsToExtract: [],
+    // In an array, you list the name of the column you want to concatenate
+    toArray: ['wrong']
+}, function(err, data) {
+    console.log(data);
+    // will output 
+    //  { 'Feuille 1': 
+    //   [
+    //    {
+    //      question: 'The sky is ?', 
+    //      good: 'blue',
+    //      wrong: ['red', 'pink', 'green'] },
+    //    { 
+    //      question: 'Water freeze at ?',
+    //      good: '0',
+    //      wrong: ['4', '90', '-23']
+    //    } 
+    //   ]
+    //  }
+
+});
+
+```
+
+### FLAG "toColumn"
+This flag allow to create new object for columns with same name (by default the first column is on output and others are ignored)
+```js
+const { extractSheets } = require('spreadsheet-to-json');
+
+extractSheets({
+    // your google spreadhsheet key
+    spreadsheetKey: '1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA',
+    // your google oauth2 credentials
+    credentials: require('./google-generated-creds.json'),
+    // names of the sheet you want to extract (or [] for all)
+    sheetsToExtract: [],
+    // Flag to return same columns in an array
+    toArray: ['wrong']
+}, function(err, data) {
+    console.log(data);
+    // will output 
+    //  { 'Feuille 1': 
+    //       [ { question: 'The sky is ?',
+    //           good: 'blue',
+    //           wrong: 'red',
+    //           wrong_2: 'pink',
+    //           wrong_3: 'green' },
+    //         { question: 'Water freeze at ?',
+    //           good: '0',
+    //           wrong: '4',
+    //           wrong_2: '90',
+    //           wrong_3: '-23' } ] }
+
+
+});
+
+```
+
+IMPORTANT: If you use toArray and toColumn flags on the same name, toArray will be used.
+
 
 ## Authentification
 
