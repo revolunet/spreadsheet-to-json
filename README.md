@@ -37,7 +37,6 @@ The final JSON is based on sheets names and column titles and finally looks like
 
 This can be useful when you want people edit spreadsheets and need to work with the data.
 
-
 ## Install
 
 `npm i --save spreadsheet-to-json`
@@ -45,39 +44,41 @@ This can be useful when you want people edit spreadsheets and need to work with 
 ## QuickStart
 
 ```js
-const { extractSheets } = require('spreadsheet-to-json');
+const { extractSheets } = require("spreadsheet-to-json");
 
 // optional custom format cell function
-const formatCell = (sheetTitle, columnTitle, value) =>  value.toUpperCase();
+const formatCell = (sheetTitle, columnTitle, value) => value.toUpperCase();
 
-extractSheets({
+extractSheets(
+  {
     // your google spreadhsheet key
-    spreadsheetKey: 'abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc',
+    spreadsheetKey: "abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc",
     // your google oauth2 credentials (optional for world-readable spreadsheets)
-    credentials: require('./google-generated-creds.json'),
-    // names of the sheet you want to extract (or [] for all)
-    sheetsToExtract: ['Customers', 'Invoices'],
-    // custom function to parse the cells
+    credentials: require("./google-generated-creds.json"),
+    // optional: names of the sheets you want to extract
+    sheetsToExtract: ["Customers", "Invoices"],
+    // optional: custom function to parse the cells
     formatCell: formatCell
-}, function(err, data) {
-    console.log('Customers: ', data.Customers);
-    console.log('Invoices: ', data.Invoices);
-});
-
+  },
+  function(err, data) {
+    console.log("Customers: ", data.Customers);
+    console.log("Invoices: ", data.Invoices);
+  }
+);
 ```
 
+see [./example.js](./example.js)
 
 ## Authentification
 
 Create a credentials.json file for your app here : https://console.developers.google.com/
 
- - create a new project
- - enable the Drive API
- - in **credentials**, select **create new client id** then **service account** and save the generated JSON. (privately)
- - the just paste the JSON contents as `credentials` in the `extractSheets` call.
+- create a new project
+- enable the Drive API
+- in **credentials**, select **create new credentials** then **service account** and save the generated JSON. (privately)
+- then give the JSON contents to the `credentials` parameter in the `extractSheets` call.
 
 Share the target google spreadsheet with the `client_email` from the credentials.json.
-
 
 ## Tests
 
@@ -124,11 +125,10 @@ passing:   21
 duration:  1.9s
 ```
 
-
 ## Author
 
 Julien Bouquillon <julien@bouquillon.com> http://github.com/revolunet
 
 ## License
 
- - **MIT** : http://opensource.org/licenses/MIT
+- **MIT** : http://opensource.org/licenses/MIT
