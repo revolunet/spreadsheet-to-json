@@ -95,7 +95,7 @@ extractSheets({
     // your google spreadhsheet key
     spreadsheetKey: "1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA",
     // your google oauth2 credentials
-    credentials: require("./google-generated-creds.json"),
+    credentials: null,
     // names of the sheet you want to extract (or [] for all)
     sheetsToExtract: [],
     // In an array, you list the name of the column you want to concatenate
@@ -129,8 +129,7 @@ const { extractSheets } = require("spreadsheet-to-json");
 extractSheets({
     // your google spreadhsheet key
     spreadsheetKey: "1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA",
-    // your google oauth2 credentials
-    credentials: require("./google-generated-creds.json"),
+    credentials: null,
     // names of the sheet you want to extract (or [] for all)
     sheetsToExtract: [],
     // Flag to return same columns in an array
@@ -158,12 +157,6 @@ extractSheets({
 IMPORTANT: If you use toArray and toColumn flags on the same name, toArray will be used.
 
 ## Tests
-
-If you want to test the package with "npm test", you have to create a credentials.json file here: https://console.developers.google.com/
-Follow `Authentification` instructions except the last one: the target google spreadsheet is already shared with everybody.
-You will have to copy your credetials.json in the test folder.
-You now can "npm test".
-
 
 ```
 extractSheet should produce correct data

@@ -292,7 +292,7 @@ test("toArray (option)", (t) => {
 	var convert = proxyquire('../src/index', { 'path': {} });
 	convert.extractSheets({
 		spreadsheetKey: spreadsheetKey,
-		credentials: require('./credentials'),
+		credentials: null,
 		sheetsToExtract: [],
 		toArray: ['wrong']
 	}, function(err, data) {
@@ -314,7 +314,7 @@ test("toColumn (option)", (t) => {
 	var convert = proxyquire('../src/index', { 'path': {} });
 	convert.extractSheets({
 		spreadsheetKey: spreadsheetKey,
-		credentials: require('./credentials'),
+		credentials: null,
 		sheetsToExtract: [],
 		toColumn: ['wrong']
 	}, function(err, data) {
