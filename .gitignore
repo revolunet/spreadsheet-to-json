@@ -1,3 +1,4 @@
 node_modules
 credentials.json
 *.DS_Store
+client_id.json
