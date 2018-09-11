@@ -286,7 +286,6 @@ test("columns with exotic names should be handled correctly", t => {
   );
 });
 
-
 test("toArray (option)", (t) => {
 	var spreadsheetKey = '1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA';
 	var convert = proxyquire('../src/index', { 'path': {} });

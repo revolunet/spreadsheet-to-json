@@ -91,10 +91,12 @@ This flag allow to concatenate data of the columns with the same title
 ```js
 const { extractSheets } = require("spreadsheet-to-json");
 
-extractSheets({
+
+extractSheets(
+  {
     // your google spreadhsheet key
+
     spreadsheetKey: "1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA",
-    // your google oauth2 credentials
     credentials: null,
     // names of the sheet you want to extract (or [] for all)
     sheetsToExtract: [],
@@ -124,8 +126,7 @@ extractSheets({
 ### FLAG "toColumn"
 This flag allow to create new object for columns with same name (by default the first column is on output and others are ignored)
 ```js
-const { extractSheets } = require("spreadsheet-to-json");
-
+const { extractSheets } = require("spreadsheet-to-json")
 extractSheets({
     // your google spreadhsheet key
     spreadsheetKey: "1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA",
@@ -148,10 +149,7 @@ extractSheets({
     //           wrong: '4',
     //           wrong_2: '90',
     //           wrong_3: '-23' } ] }
-
-
 });
-
 ```
 
 IMPORTANT: If you use toArray and toColumn flags on the same name, toArray will be used.
