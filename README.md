@@ -28,7 +28,7 @@ The final JSON is based on sheets names and column titles and finally looks like
       "totalAmount": "12367.12"
     },
     {
-      "name": "F0002",
+      "id": "F0002",
       "totalAmount": "4398.2"
     }
   ]
