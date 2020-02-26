@@ -24,7 +24,7 @@
     "drive"
   ],
   "dependencies": {
-    "google-spreadsheet": "^2.0.5"
+    "google-spreadsheet": "^3.0.8"
   },
   "devDependencies": {
     "eslint": "^5.0.1",
