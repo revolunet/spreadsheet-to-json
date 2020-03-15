@@ -80,6 +80,80 @@ Create a credentials.json file for your app here : https://console.developers.go
 
 Share the target google spreadsheet with the `client_email` from the credentials.json.
 
+
+## Specials Flags
+You also can use two flags: toArray and toColumn.
+The following exemples use this worksheet: https://docs.google.com/spreadsheets/d/1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA/edit#gid=0 :
+
+
+### FLAG "toArray"
+This flag allow to concatenate data of the columns with the same title
+```js
+const { extractSheets } = require("spreadsheet-to-json");
+
+
+extractSheets(
+  {
+    // your google spreadhsheet key
+
+    spreadsheetKey: "1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA",
+    credentials: null,
+    // names of the sheet you want to extract (or [] for all)
+    sheetsToExtract: [],
+    // In an array, you list the name of the column you want to concatenate
+    toArray: ["wrong"]
+}, function(err, data) {
+    console.log(data);
+    // will output 
+    //  { 'Feuille 1': 
+    //   [
+    //    {
+    //      question: 'The sky is ?', 
+    //      good: 'blue',
+    //      wrong: ['red', 'pink', 'green'] },
+    //    { 
+    //      question: 'Water freeze at ?',
+    //      good: '0',
+    //      wrong: ['4', '90', '-23']
+    //    } 
+    //   ]
+    //  }
+
+});
+
+```
+
+### FLAG "toColumn"
+This flag allow to create new object for columns with same name (by default the first column is on output and others are ignored)
+```js
+const { extractSheets } = require("spreadsheet-to-json")
+extractSheets({
+    // your google spreadhsheet key
+    spreadsheetKey: "1RbwBQOJRYNefRtAtux3O-gyV8JDrHL9BwXCoBPPQMjA",
+    credentials: null,
+    // names of the sheet you want to extract (or [] for all)
+    sheetsToExtract: [],
+    // Flag to return same columns in an array
+    toArray: ["wrong"]
+}, function(err, data) {
+    console.log(data);
+    // will output 
+    //  { 'Feuille 1': 
+    //       [ { question: 'The sky is ?',
+    //           good: 'blue',
+    //           wrong: 'red',
+    //           wrong_2: 'pink',
+    //           wrong_3: 'green' },
+    //         { question: 'Water freeze at ?',
+    //           good: '0',
+    //           wrong: '4',
+    //           wrong_2: '90',
+    //           wrong_3: '-23' } ] }
+});
+```
+
+IMPORTANT: If you use toArray and toColumn flags on the same name, toArray will be used.
+
 ## Tests
 
 ```
@@ -119,10 +193,25 @@ columns with exotic names should be handled correctly
 ✓ Exotic column name should be renamed in data
 ✓ Exotic column name should be handled correctly
 
+toArray (option)
 
-total:     21
-passing:   21
-duration:  1.9s
+✔ Sheet should contain 2 objects
+✔ Sheet properties names should equal question,good,wrong
+✔ Wrong element should exist in output as an array
+✔ First object should contain a wrong array with three elements
+
+toColumn (option)
+
+✔ Sheet should contain 2 objects
+✔ Sheet properties names should equal question,good,wrong,wrong_2,wrong_3
+✔ Wrong element should not be an array
+✔ Wrong object in first object should contain red
+
+
+
+total:     27
+passing:   27
+duration:  3s
 ```
 
 ## Author

@@ -5,7 +5,33 @@ const GoogleSpreadsheet = require("google-spreadsheet");
 const getCleanTitle = title =>
   title.toLowerCase().replace(/[ _:\/#\|@\\]/gi, "");
 
-const fetchData = (worksheet, colTitles, formatCell, cb) => {
+const getCleanRowToColumns = (formatCell, row, title, cleanRow, worksheet) => {
+    if (!cleanRow[title]) {
+        cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+    }
+    else {
+        var position = 2;
+        while (cleanRow[title + '_' + position]) {
+            position++;
+        }
+            cleanRow[title + '_' + position] = formatCell(row[title + '_' + position] || null, worksheet.title, title + '_' + position);
+    }
+};
+
+const getCleanRow = (formatCell, row, title, cleanRow, worksheet, titleToArray) => {
+    if (Array.isArray(cleanRow[title]) && titleToArray) {
+        var position = cleanRow[title].length + 1;
+        cleanRow[title].push(formatCell(row[title + '_' + position] || null, worksheet.title, title));        
+    } else if (cleanRow[title] && titleToArray) {
+            cleanRow[title] = [cleanRow[title], formatCell(row[title + '_2'] || null, worksheet.title, title)];
+    }
+    else {
+        // for some reason, keys are lower-cased in google xml api
+        cleanRow[title] = formatCell(row[getCleanTitle(title)] || null, worksheet.title, title);
+    }
+};
+
+const fetchData = (worksheet, colTitles, formatCell, cb, toArray, toColumn) => {
   worksheet.getRows(
     {
       start: 0,
@@ -21,12 +47,18 @@ const fetchData = (worksheet, colTitles, formatCell, cb) => {
           const cleanRow = {};
 
           colTitles.forEach(title => {
-            // for some reason, keys are lower-cased in google xml api
-            cleanRow[title] = formatCell(
-              row[getCleanTitle(title)] || null,
-              worksheet.title,
-              title
-            );
+            var titleToArray, titleToColumn = 0;
+            if (toArray) {
+                titleToArray = toArray.find( element => element === title);
+            }
+            if (toColumn) {
+                titleToColumn = toColumn.find( element => element === title);
+            }
+            if (!titleToColumn && titleToArray) {
+                getCleanRow(formatCell, row, title, cleanRow, worksheet, titleToArray);
+            } else {
+                getCleanRowToColumns(formatCell, row, title, cleanRow, worksheet);
+            }
           });
           return cleanRow;
         })
@@ -39,7 +71,7 @@ const fetchData = (worksheet, colTitles, formatCell, cb) => {
  * fetch given worksheet data, arranging in JSON
  * return an array of objects with properties from column headers
  */
-const extractSheet = ({ worksheet, formatCell = a => a }, cb) => {
+const extractSheet = ({ worksheet, formatCell = a => a }, cb, toArray, toColumn) => {
   // fetch column headers first
   worksheet.getCells(
     {
@@ -54,7 +86,7 @@ const extractSheet = ({ worksheet, formatCell = a => a }, cb) => {
       }
       const colTitles = rows.map(row => row.value);
       // then fetch datas
-      fetchData(worksheet, colTitles, formatCell, cb);
+      fetchData(worksheet, colTitles, formatCell, cb, toArray, toColumn);
     }
   );
 };
@@ -63,7 +95,9 @@ const extractSheetsFromSpreadsheet = (
   spreadSheet,
   sheetsToExtract,
   formatCell = a => a,
-  cb
+  cb,
+  toArray,
+  toColumn
 ) => {
   spreadSheet.getInfo((err, sheetInfo) => {
     if (err) {
@@ -81,7 +115,7 @@ const extractSheetsFromSpreadsheet = (
       if (!worksheet) {
         return cb2(null, []);
       }
-      extractSheet({ worksheet, formatCell }, cb2);
+      extractSheet({ worksheet, formatCell }, cb2, toArray, toColumn);
     };
 
     sheetsToExtract.map(table => {
@@ -106,6 +140,8 @@ const extractSheets = (
     spreadsheetKey,
     sheetsToExtract = [],
     credentials,
+    toArray,
+    toColumn,
     formatCell = a => a
   } = {},
   cb
@@ -117,7 +153,9 @@ const extractSheets = (
       spreadSheet,
       sheetsToExtract,
       formatCell,
-      cb
+      cb,
+      toArray,
+      toColumn
     );
   }
 
@@ -125,7 +163,7 @@ const extractSheets = (
     if (err) {
       return cb(err);
     }
-    extractSheetsFromSpreadsheet(spreadSheet, sheetsToExtract, formatCell, cb);
+    extractSheetsFromSpreadsheet(spreadSheet, sheetsToExtract, formatCell, cb, toArray, toColumn);
   });
 };
 
