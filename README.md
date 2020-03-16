@@ -43,6 +43,8 @@ This can be useful when you want people edit spreadsheets and need to work with 
 
 ## QuickStart
 
+`extractSheets` can use node callback pattern or async/await.
+
 ```js
 const { extractSheets } = require("spreadsheet-to-json");
 
@@ -53,7 +55,7 @@ extractSheets(
   {
     // your google spreadhsheet key
     spreadsheetKey: "abch54Ah75feBqKGiUjITgE9876Ypb0yE-abc",
-    // your google oauth2 credentials (optional for world-readable spreadsheets)
+    // your google oauth2 credentials or API_KEY
     credentials: require("./google-generated-creds.json"),
     // optional: names of the sheets you want to extract
     sheetsToExtract: ["Customers", "Invoices"],
@@ -70,6 +72,16 @@ extractSheets(
 see [./example.js](./example.js)
 
 ## Authentification
+
+The `credentials` key can either be a API_KEY `string` or a service account `object`.
+
+### API Key
+
+You can create an API key here : https://console.developers.google.com/apis/credentials
+
+Be sure to restrict it to Google Drive API
+
+### Google service account
 
 Create a credentials.json file for your app here : https://console.developers.google.com/
 

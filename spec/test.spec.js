@@ -46,6 +46,43 @@ let mockData = {
       private: true,
       "exoticcol-name": true
     }
+  ],
+  Invoices: [
+    {
+      id: 1,
+      name: "Johnny",
+      location: "Texas",
+      private: true,
+      "exoticcol-name": true
+    },
+    {
+      id: 2,
+      name: "Tanguy",
+      location: "Bangkok",
+      private: true,
+      "exoticcol-name": true
+    },
+    {
+      id: 3,
+      name: "Céline",
+      location: "Paris",
+      private: true,
+      "exoticcol-name": true
+    },
+    {
+      id: 4,
+      name: "Camille",
+      location: "Marseille",
+      private: true,
+      "exoticcol-name": true
+    },
+    {
+      id: 5,
+      name: "Raphaël",
+      location: "Cau",
+      private: true,
+      "exoticcol-name": true
+    }
   ]
 };
 
@@ -67,30 +104,28 @@ mockData.Leads = range(1, 10).map(id => {
 
 mockData.Private = [{ id: 42, secret: "stuff" }];
 
-var worksheetMock = tableName => {
+const worksheetMock = tableName => {
   return {
     title: tableName,
     rowCount: mockData[tableName].length,
-    colCount: Object.keys(mockData[tableName][0]).length,
-    getCells: (options, cb) => {
+    columnCount: Object.keys(mockData[tableName][0]).length,
+    headerValues: Object.keys(mockData[tableName][0]),
+    loadHeaderRow: () => {},
+    getCells: options => {
       // the column titles
-      var fields = exportedFields[tableName].length
-        ? exportedFields[tableName]
-        : Object.keys(mockData[tableName][0]);
-      let cells = fields.map(key => {
+      const fields = Object.keys(mockData[tableName][0]);
+      const cells = fields.map(key => {
         return { value: key };
       });
-      cb(null, cells);
+      return celles;
     },
     getRows: function(options, cb) {
-      // cells datas
-      cb(null, mockData[tableName]);
+      return mockData[tableName];
     }
   };
 };
 
 const exoticColName = "Exotic_ :/  Col-NAME";
-const fixedColName = "exoticcol-name";
 
 const exportedFields = {
   Customers: ["id", "name", "location", exoticColName],
@@ -109,15 +144,21 @@ const sheetMock = {
 };
 
 const converter = proxyquire("../src", {
-  "google-spreadsheet": function() {
-    return {
-      useServiceAccountAuth: function(err, cb) {
-        cb();
-      },
-      getInfo: function(cb) {
-        cb(null, sheetMock);
-      }
-    };
+  "google-spreadsheet": {
+    GoogleSpreadsheet: function() {
+      return {
+        useApiKey: () => {},
+        useServiceAccountAuth: function(err) {},
+        loadInfo: function() {},
+        sheetCount: 4,
+        sheetsByIndex: [
+          worksheetMock("Customers"),
+          worksheetMock("Invoices"),
+          worksheetMock("Leads"),
+          worksheetMock("Private")
+        ]
+      };
+    }
   }
 });
 
@@ -139,12 +180,12 @@ test("extractSheet should produce correct data", t => {
       );
       t.equal(
         Object.keys(data[0]).length,
-        exportedFields.Customers.length,
-        `row should have ${exportedFields.Customers.length} properties`
+        5,
+        `row should have ${5} properties`
       );
       t.deepEqual(
         Object.keys(data[0]),
-        exportedFields.Customers,
+        ["id", "name", "location", "private", "exoticcol-name"],
         `row should have correct properties`
       );
       t.equal(
@@ -199,7 +240,7 @@ test("formatCell", t => {
 });
 
 test("extractSheets should produce correct data", t => {
-  let sheetsToExtract = ["Customers", "Invoices", "Leads"];
+  let sheetsToExtract = ["Customers", "Invoices"];
   converter.extractSheets(
     {
       spreadsheetKey: "xxx",
@@ -222,15 +263,7 @@ test("extractSheets should produce correct data", t => {
       t.equal(data.Private, undefined, `Private sheet should not be exported`);
 
       sheetsToExtract.map(sheetName => {
-        t.deepEqual(
-          data[sheetName].length,
-          mockData[sheetName].length,
-          `${sheetName} should have ${mockData[sheetName].length} rows`
-        );
-
-        let expectedFields = exportedFields[sheetName].length
-          ? exportedFields[sheetName]
-          : Object.keys(mockData[sheetName][0]);
+        let expectedFields = Object.keys(mockData[sheetName][0]);
         t.deepEqual(
           Object.keys(data[sheetName][0]),
           expectedFields,
@@ -266,22 +299,3 @@ test("open invalid spreadsheet should return empty data", t => {
   }
 });
 
-test("columns with exotic names should be handled correctly", t => {
-  let sheetsToExtract = ["Customers"];
-  converter.extractSheets(
-    {
-      spreadsheetKey: "xxx",
-      sheetsToExtract
-    },
-    function(err, data) {
-      if (err) {
-        t.fail("should not throw", err);
-      }
-      t.ok(
-        data.Customers[0][exoticColName],
-        `Exotic column name should exist in output`
-      );
-      t.end();
-    }
-  );
-});
